@@ -1,22 +1,22 @@
-# Google·­ÒëAPIµ÷ÓÃ
+# Googleç¿»è¯‘APIè°ƒç”¨
 <# 
-ÇëÔÚÍ¬Ä¿Â¼ÏÂ½¨Á¢Ò»¸ölang.jsonÎÄ¼ş£¬ÄÚÈİÀàËÆÓÚ
+è¯·åœ¨åŒç›®å½•ä¸‹å»ºç«‹ä¸€ä¸ªlang.jsonæ–‡ä»¶ï¼Œå†…å®¹ç±»ä¼¼äº
 {
-    "en": "Ó¢Óï",
-    "zh": "ÖĞÎÄ",
-    "zh-CN": "ÖĞÎÄ(¼òÌå)",
-    "zh-HK": "ÖĞÎÄ(Ïã¸Û)",
-    "zh-MO": "ÖĞÎÄ(°ÄÃÅ)",
-    "zh-SG": "ÖĞÎÄ(ĞÂ¼ÓÆÂ)",
-    "zh-TW": "ÖĞÎÄ(·±Ìå)"
+    "en": "è‹±è¯­",
+    "zh": "ä¸­æ–‡",
+    "zh-CN": "ä¸­æ–‡(ç®€ä½“)",
+    "zh-HK": "ä¸­æ–‡(é¦™æ¸¯)",
+    "zh-MO": "ä¸­æ–‡(æ¾³é—¨)",
+    "zh-SG": "ä¸­æ–‡(æ–°åŠ å¡)",
+    "zh-TW": "ä¸­æ–‡(ç¹ä½“)"
 }
 #>
 $ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"
 $ur = "http://translate.google.cn/translate_a/single?client=gtx&dt=t&dj=1&ie=UTF-8&sl=auto&tl=zh_CN&q="
-$reg = "trans"":"".*"",""orig" # ÕıÔò
+$reg = "trans"":"".*"",""orig" # æ­£åˆ™
 function Trans2Zh-CN {
     if ($args.Count -eq 0) {
-        "²ÎÊıÎª¿Õ!"
+        "å‚æ•°ä¸ºç©º!"
         return
     }
     else {
@@ -25,7 +25,7 @@ function Trans2Zh-CN {
             $resu = Invoke-WebRequest -Uri $url -UserAgent $ua
             if ($resu.content -match $reg) {
                 $result = ConvertFrom-Json -InputObject $resu.content
-                "`n·­Òë: " + $result.sentences.trans
+                "`nç¿»è¯‘: " + $result.sentences.trans
                 $src = $result.src
                 if(Test-Path "lang.json") {
                     $dic = gc "lang.json"
@@ -34,18 +34,18 @@ function Trans2Zh-CN {
                     $lang = $index.($src)
                 }
                 else {
-                    "Çë¼ì²éµ±Ç°Ä¿Â¼ÏÂÊÇ·ñÓĞlang.jsonÎÄ¼ş£¡"
+                    "è¯·æ£€æŸ¥å½“å‰ç›®å½•ä¸‹æ˜¯å¦æœ‰lang.jsonæ–‡ä»¶ï¼"
                     $lang = $src
                 }
-                "`n·­ÒëÓÉGoogleÌá¹©`nÍÆ²âÔ´ÓïÑÔÎª $lang `n"
+                "`nç¿»è¯‘ç”±Googleæä¾›`næ¨æµ‹æºè¯­è¨€ä¸º $lang `n"
             }
             else {
                 if (!(Test-Connection -ComputerName translate.google.cn -Quiet)) {
-                    "ÍøÂç³öÁËµãÎÊÌâ..."
-                    "Çë¼ì²éÄúµÄÍøÂç..."
+                    "ç½‘ç»œå‡ºäº†ç‚¹é—®é¢˜..."
+                    "è¯·æ£€æŸ¥æ‚¨çš„ç½‘ç»œ..."
                 }
                 else {
-                    "Î´Öª´íÎóÇëÖØÊÔ..."
+                    "æœªçŸ¥é”™è¯¯è¯·é‡è¯•..."
                     Pause
                 }
             }
@@ -55,6 +55,6 @@ function Trans2Zh-CN {
 
 while ($true) {
     $str = ""
-    while ($str -eq "") { $str = Read-Host "ÇëÊäÈëÒª·­ÒëµÄÎÄ±¾£¬£¨°´Êó±êÓÒ¼üÕ³Ìù£©" }
+    while ($str -eq "") { $str = Read-Host "è¯·è¾“å…¥è¦ç¿»è¯‘çš„æ–‡æœ¬ï¼Œï¼ˆæŒ‰é¼ æ ‡å³é”®ç²˜è´´ï¼‰" }
     Trans2Zh-CN $str
 }

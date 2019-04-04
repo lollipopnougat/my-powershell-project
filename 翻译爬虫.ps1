@@ -4,7 +4,7 @@ $reg = "trans"":"".*"",""orig"
 function Trans2Zh-CN {
 
     if ($args.Count -eq 0) {
-        Write-Host "²ÎÊıÎª¿Õ!"
+        Write-Host "å‚æ•°ä¸ºç©º!"
         return
     }
     else {
@@ -14,19 +14,19 @@ function Trans2Zh-CN {
             if ($resu.content -match $reg) {
                 #$matches.count
                 $res = $matches[0]
-                $result = "·­Òë: " + $res.SubString(8, $res.length - 15)
+                $result = "ç¿»è¯‘: " + $res.SubString(8, $res.length - 15)
                 Write-Host " "
                 Write-Host $result
-                Write-Host "·­ÒëÓÉGoogleÌá¹©"
+                Write-Host "ç¿»è¯‘ç”±Googleæä¾›"
                 Write-Host " "
             }
             else {
                 if (!(Test-Connection -ComputerName translate.google.cn -Quiet)) {
-                    Write-Host "ÍøÂç³öÁËµãÎÊÌâ..."
-                    Write-Host "Çë¼ì²éÄúµÄÍøÂç..."
+                    Write-Host "ç½‘ç»œå‡ºäº†ç‚¹é—®é¢˜..."
+                    Write-Host "è¯·æ£€æŸ¥æ‚¨çš„ç½‘ç»œ..."
                 }
                 else {
-                    Write-Host "Î´Öª´íÎóÇëÖØÊÔ..."
+                    Write-Host "æœªçŸ¥é”™è¯¯è¯·é‡è¯•..."
                     Pause
                 }
             }
@@ -36,7 +36,7 @@ function Trans2Zh-CN {
 }
 
 while ($true) {
-    $str = Read-Host "ÇëÊäÈëÒª·­ÒëµÄÎÄ±¾£¬£¨°´Êó±êÓÒ¼üÕ³Ìù£©"
+    $str = Read-Host "è¯·è¾“å…¥è¦ç¿»è¯‘çš„æ–‡æœ¬ï¼Œï¼ˆæŒ‰é¼ æ ‡å³é”®ç²˜è´´ï¼‰"
     Trans2Zh-CN $str
 }
 
