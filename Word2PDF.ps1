@@ -1,6 +1,6 @@
 # -*- coding=UTF8 -*-
 
-#加载.NET System.Windows.Forms 类
+#加载.NET System.Windows.Forms 类 并阻止控制台输出(通过管道发送到out-null)
 [Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") | Out-Null
 #创建Windows Script Shell对象
 $ws = New-Object -ComObject WScript.Shell
@@ -25,7 +25,7 @@ function Show-OFDialog
     }
     else {
         #类似于MessageBox 第一个0表示显示时间无限长，第二个0表示显示OK按钮+16表示一个警告图标
-        $ws.popup("您未选择文件", 0, "问题来了", 0 + 16) | Out-Null
+        $ws.popup("您未选择文件", 0, "问题来了", 0 + 16)
         Exit
     }
 }
@@ -43,7 +43,7 @@ function Show-SFDialog
         return $sfd.FileName.ToString()
     }
     else {
-        $ws.popup("您未确认或文件名长度为0", 0, "问题来了", 0 + 16) | Out-Null
+        $ws.popup("您未确认或文件名长度为0", 0, "问题来了", 0 + 16)
         Exit
     }
 }
@@ -67,10 +67,10 @@ $pdfsuc = $?
 
 if($docext -and $pdfsuc) {
     #64表示提示图标
-    $ws.popup("转换成功", 0, "成功!", 0 + 64) | Out-Null
+    $ws.popup("转换成功", 0, "成功!", 0 + 64)
 }
 else {
-    $ws.popup("转换失败", 0, "啊哟...", 0 + 16) | Out-Null
+    $ws.popup("转换失败", 0, "啊哟...", 0 + 16)
 }
 #关闭文件
 $document.Close()
