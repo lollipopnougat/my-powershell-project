@@ -1,4 +1,4 @@
-# -*- coding=GBK -*-
+# -*- coding=UTF8 -*-
 
 #加载.NET System.Windows.Forms 类
 [Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") | Out-Null
