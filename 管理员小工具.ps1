@@ -1,114 +1,140 @@
+# ÊÖĞ´WinForm,¸Ğ¾õºÃÏñÑ§µ½ÁË²»ÉÙ
 #param( $a, $b )
-#region å…³é”®ä»£ç ï¼šå¼ºè¿«ä»¥ç®¡ç†å‘˜æƒé™è¿è¡Œ
+#region ¹Ø¼ü´úÂë£ºÇ¿ÆÈÒÔ¹ÜÀíÔ±È¨ÏŞÔËĞĞ
 $currentWi = [Security.Principal.WindowsIdentity]::GetCurrent()
 $currentWp = [Security.Principal.WindowsPrincipal]$currentWi
  
-if( -not $currentWp.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
-{
-    <#
+if ( -not $currentWp.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+  <#
     $boundPara = ($MyInvocation.BoundParameters.Keys | foreach {
         '-{0} {1}' -f  $_ ,$MyInvocation.BoundParameters[$_]} ) -join ' '
     $currentFile = (Resolve-Path  $MyInvocation.InvocationName).Path
     $fullPara = $boundPara + ' ' + $args -join ' '#>
-    $path = $MyInvocation.MyCommand.Source
-    Start-Process "$psHome\powershell.exe"   -ArgumentList "$path"  -verb runas
-    Sleep 3
-    return
+  $path = $MyInvocation.MyCommand.Source
+  Start-Process "$psHome\powershell.exe"   -ArgumentList "$path"  -verb runas
+  Sleep 3
+  return
 }
 $ws = New-Object -ComObject WScript.Shell
 function Edit-Hosts {
-    Start-Process notepad "C:\Windows\System32\drivers\etc\hosts" -Verb runas
+  Start-Process notepad "C:\Windows\System32\drivers\etc\hosts" -Verb runas
 }
 function Del-Service {
-    param([string]$name)
-    $service = Get-WmiObject -Class Win32_Service -Filter "Name='$name'"
-    if($service -eq $null) {
-        $ws.popup("æ‰¾ä¸åˆ°åä¸º`" $name `"çš„æœåŠ¡ï¼ï¼",5,"é”™è¯¯", 0 + 48)
+  param([string]$name)
+  $service = Get-WmiObject -Class Win32_Service -Filter "Name='$name'"
+  if ($null -eq $service) {
+    $ws.popup("ÕÒ²»µ½ÃûÎª`" $name `"µÄ·şÎñ£¡£¡", 5, "´íÎó", 0 + 16)
+    $tim = get-date
+    $time = $tim.GetDateTimeFormats('T')[0]
+    Write-Host "$time  Î´Öª·şÎñÃû(·şÎñ`" $name `"²»´æÔÚ)"
+  }
+  else {
+    $wsr = $ws.popup("½«»áÉ¾³ı $name ·şÎñ£¬È·¶¨Âğ£¿", 0, "ÇëÈ·ÈÏ...", 4 + 64)
+    if ($wsr -eq 6) {
+      $service.delete()
+      if($?) {
+        $ws.popup("ÒÑÉ¾³ı·şÎñ $name ", 2, "³É¹¦", 0 + 64)
         $tim = get-date
         $time = $tim.GetDateTimeFormats('T')[0]
-        Write-Host "$time  è¾“å…¥äº†æœªçŸ¥æœåŠ¡å(æœåŠ¡`" $name `"ä¸å­˜åœ¨)"
+        Write-Host "$time  É¾³ıÁË $name ·şÎñ"
+      }
+      else {
+        $ws.popup("É¾³ı·şÎñ $name ", 2, "Ê§°Ü", 0 + 16)
+        $tim = get-date
+        $time = $tim.GetDateTimeFormats('T')[0]
+        Write-Host "$time  É¾³ıÁË $name ·şÎñ"
+      }
     }
     else {
-        $wsr = $ws.popup("å°†ä¼šåˆ é™¤ $name æœåŠ¡ï¼Œç¡®å®šå—ï¼Ÿ",0,"è¯·ç¡®è®¤...", 4 + 64)
-        if($wsr -eq 6) {
-            $service.delete()
-            $ws.popup("å·²åˆ é™¤æœåŠ¡ $name ",2,"æˆåŠŸ")
-            $tim = get-date
-            $time = $tim.GetDateTimeFormats('T')[0]
-            Write-Host "$time  åˆ é™¤äº† $name æœåŠ¡"
-        }
-        else {
-            $tim = get-date
-            $time = $tim.GetDateTimeFormats('T')[0]
-            $ws.popup("å·²å–æ¶ˆæ“ä½œ",2,"è¯·ç¡®è®¤...")
-            Write-Host "$time  å–æ¶ˆåˆ é™¤ $name æœåŠ¡æ“ä½œ"
-        } 
-    }
+      $tim = get-date
+      $time = $tim.GetDateTimeFormats('T')[0]
+      $ws.popup("ÒÑÈ¡Ïû²Ù×÷", 2, "ÌáÊ¾...")
+      Write-Host "$time  È¡ÏûÉ¾³ı $name ·şÎñ²Ù×÷"
+    } 
+  }
     
 }
 
-$version = "1.0"
-[console]::Title = "PowerShell ç®¡ç†å‘˜å°å·¥å…· V $version"
-$ws.popup("æ¬¢è¿ä½¿ç”¨PowerShell ç®¡ç†å‘˜å°å·¥å…·!",2,"æ¬¢è¿ï¼")
+$version = "1.2"
+[console]::Title = "PowerShell ¹ÜÀíÔ±Ğ¡¹¤¾ß V $version"
+$ws.popup("»¶Ó­Ê¹ÓÃPowerShell ¹ÜÀíÔ±Ğ¡¹¤¾ß!", 2, "»¶Ó­£¡")
 
 Add-Type -AssemblyName System.Windows.Forms
 $WForm = New-Object System.Windows.Forms.Form
-$WForm.Text = "PowerShell ç®¡ç†å‘˜å°å·¥å…· V $version"
-$app=[System.Windows.Forms.Application]
+$WForm.Text = "PowerShell ¹ÜÀíÔ±Ğ¡¹¤¾ß V $version"
+$WForm.Size = New-Object System.Drawing.Size -argumentList 320, 300
+$app = [System.Windows.Forms.Application]
 $button1 = new-object System.Windows.Forms.Button
-$button1.Size = new-object System.Drawing.Size  -argumentlist 75, 23
-$button1.Text = "ä¿®æ”¹Hostsæ–‡ä»¶"
+$button1.Size = new-object System.Drawing.Size  -argumentlist 200, 30
+$button1.Text = "Ö±½ÓĞŞ¸ÄHostsÎÄ¼ş"
+$button1.Font = New-Object System.Drawing.Font -ArgumentList "Î¢ÈíÑÅºÚ", ([single]10.8), "Regular", "Point", ([byte](134))
 
 
 $button2 = new-object System.Windows.Forms.Button
-$button2.Size = new-object System.Drawing.Size  -argumentlist 75, 23
-$button2.Text = "åˆ é™¤æœåŠ¡"
+$button2.Size = new-object System.Drawing.Size  -argumentlist 200, 30
+$button2.Text = "É¾³ıÏÂÃæÑ¡ÖĞµÄÏµÍ³·şÎñ"
+$button2.Font = New-Object System.Drawing.Font -ArgumentList "Î¢ÈíÑÅºÚ", ([single]10.8), "Regular", "Point", ([byte](134))
 
 $button3 = new-object System.Windows.Forms.Button
-$button3.Size = new-object System.Drawing.Size  -argumentlist 75, 23
-$button3.Text = "æŸ¥çœ‹æºç "
+$button3.Size = new-object System.Drawing.Size  -argumentlist 200, 30
+$button3.Text = "²é¿´Ô´Âë"
+$button3.Font = New-Object System.Drawing.Font -ArgumentList "Î¢ÈíÑÅºÚ", ([single]10.8), "Regular", "Point", ([byte](134))
 
-$textbox1=new-object System.Windows.Forms.TextBox
-$textBox1.Multiline = $true;
-$textBox1.Text = "è¯·è¾“å…¥è¦åˆ é™¤çš„æœåŠ¡å"
-$textBox1.Size = new-object System.Drawing.Size  -argumentlist 150, 100
+$listBox1 = new-object System.Windows.Forms.ListBox
+$listBox1.ItemHeight = 24;
+$listBox1.Font = New-Object System.Drawing.Font -ArgumentList "Î¢ÈíÑÅºÚ", ([single]10.8), "Regular", "Point", ([byte](134))
+#$listBox.Multiline = $true;
+#$textBox1.Text = "ÇëÊäÈëÒªÉ¾³ıµÄ·şÎñÃû"
+$allservices = Get-CimInstance -class Win32_Service
+$allservices | foreach { 
+  $listBox1.Items.Add($_.name) | Out-Null
+}
+$listBox1.Size = new-object System.Drawing.Size  -argumentlist 300, 120
 
 $flowLayoutPanel1 = new-object System.Windows.Forms.FlowLayoutPanel
 $WForm.Controls.Add($flowLayoutPanel1)
 
 $flowLayoutPanel1.Controls.Add($button1)
 $flowLayoutPanel1.Controls.Add($button2)
-$flowLayoutPanel1.Controls.Add($textBox1)
+$flowLayoutPanel1.Controls.Add($listBox1)
 $flowLayoutPanel1.Controls.Add($button3)
-$flowLayoutPanel1.Dock = "Fill"
+$flowLayoutPanel1.Dock = "Fill";
 $flowLayoutPanel1.FlowDirection = "TopDown"
 
 $button2ClickEventHandler = [System.EventHandler] {
-    #$name = Read-Host "è¯·è¾“å…¥æœåŠ¡å"
+  #$name = Read-Host "ÇëÊäÈë·şÎñÃû"
+  $tim = get-date
+  $time = $tim.GetDateTimeFormats('T')[0]
+  Write-Host "$time µã»÷ÁËÉ¾³ı·şÎñ°´Å¥"
+  if ($listBox1.SelectedItems.Count -gt 0) {
+    Del-Service $listBox1.SelectedItem.ToString() 
+  }
+  else {
     $tim = get-date
     $time = $tim.GetDateTimeFormats('T')[0]
-    Write-Host "$time ç‚¹å‡»äº†åˆ é™¤æœåŠ¡æŒ‰é’®"
-    Del-Service $textbox1.Text
+    $ws.popup("ÇëÏÈÑ¡ÖĞÒ»¸ö·şÎñÔÙÉ¾³ı", 5, "´íÎó", 0 + 48)
+    Write-Host "$time É¾³ıÊ§°Ü: Î´Ñ¡ÖĞÈÎºÎ·şÎñ"
+  }
 }
 $button2.Add_Click($button2ClickEventHandler)
 
 $button1ClickEventHandler = [System.EventHandler] {
-    $tim = get-date
-    $time = $tim.GetDateTimeFormats('T')[0]
-    Write-Host "$time ç‚¹å‡»äº†ä¿®æ”¹HostsæŒ‰é’®"
-    Edit-Hosts
+  $tim = get-date
+  $time = $tim.GetDateTimeFormats('T')[0]
+  Write-Host "$time µã»÷ÁËĞŞ¸ÄHosts°´Å¥"
+  $ws.popup("ÔÚ¼ÇÊÂ±¾ĞŞ¸ÄÍêÖ±½Ó±£´æ¼´¿É", 2, "ÌáÊ¾", 0 + 64)
+  Edit-Hosts
 }
 $button1.Add_Click($button1ClickEventHandler)
 
 $button3ClickEventHandler = [System.EventHandler] {
-    $tim = get-date
-    $time = $tim.GetDateTimeFormats('T')[0]
-    Write-Host "$time ç‚¹å‡»äº†æŸ¥çœ‹æºç æŒ‰é’®"
-    Write-Host "é¡ºä¾¿æ¬¢è¿è®¿é—®ä½œè€…çš„å…¶ä»–é¡¹ç›®"
-    Start-Process "https://github.com/lollipopnougat/my-powershell-project/blob/master/ç®¡ç†å‘˜å°å·¥å…·.ps1"
+  $tim = get-date
+  $time = $tim.GetDateTimeFormats('T')[0]
+  Write-Host "$time µã»÷ÁË²é¿´Ô´Âë°´Å¥"
+  Write-Host "Ë³±ã»¶Ó­·ÃÎÊ×÷ÕßµÄÆäËûÏîÄ¿"
+  Start-Process "https://github.com/lollipopnougat/my-powershell-project/blob/master/¹ÜÀíÔ±Ğ¡¹¤¾ß.ps1"
 }
 $button3.Add_Click($button3ClickEventHandler)
 
 $app::EnableVisualStyles()
 $app::Run($WForm)
-Write-Host "ç­‰å¾…3såè‡ªåŠ¨é€€å‡º"
