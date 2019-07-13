@@ -8,7 +8,7 @@ $ImageFiles = "*.bmp", "*.dib", "*.emf", "*.jpg", "*.jpe", "*.jpeg", "*.gif", "*
 $CompressFiles = "*.zip", "*.7z", "*.rar", "*.tar", "*.gz", "*.xz", "*.bz2"
 $AdobeImageFiles = "*.psd", "*.pdd", "*.psdt", "*.psb", "*.ai", "*.eps"
 function Archive-ByCreateTime {
-    $lst = ls | where name -ne ArchiveFiles.ps1
+    $lst = ls -file | where name -ne ArchiveFiles.ps1
     if ($lst.count -eq 0) {
         Write-Host "啊呀,这个目录下没有别的文件哟!"
         return
@@ -40,7 +40,7 @@ function Archive-ByCreateTime {
 }
 
 function Archive-ByLastWriteTime {
-    $lst = ls | where name -ne ArchiveFiles.ps1
+    $lst = ls -file | where name -ne ArchiveFiles.ps1
     if ($lst.count -eq 0) {
         Write-Host "啊呀,这个目录下没有别的文件哟!"
         return
@@ -72,7 +72,7 @@ function Archive-ByLastWriteTime {
 }
 
 function Archive-ByLastAccessTime {
-    $lst = ls | where name -ne ArchiveFiles.ps1
+    $lst = ls -file | where name -ne ArchiveFiles.ps1
     if ($lst.count -eq 0) {
         Write-Host "啊呀,这个目录下没有别的文件哟!"
         return
@@ -104,7 +104,7 @@ function Archive-ByLastAccessTime {
 }
 
 function Archive-ByFileType {
-    $lst = ls | where name -ne ArchiveFiles.ps1
+    $lst = ls -file | where name -ne ArchiveFiles.ps1
     if ($lst.count -eq 0) {
         Write-Host "啊呀,这个目录下没有别的文件哟!"
         return
@@ -233,10 +233,10 @@ function make-backup {
 }
 #Archive-ByFileType
 #Archive-ByCreateTime
-$version = "Ver 1.1"
+$version = "Ver 1.2"
 [console]::Title = "归档脚本 $version" 
 while ($true) {
-    echo "欢迎使用归档脚本: "
+    echo "欢迎使用归档脚本 作者: LNP"
     echo "功能: "
     echo "1: 按文件类型归档`n2: 按创建时间归档`n3: 按最后修改时间归档`n4: 按最后访问时间归档`n5: 备份文件夹(zip)`n6: 退出"
     $input1 = Read-Host "请输入数字"
